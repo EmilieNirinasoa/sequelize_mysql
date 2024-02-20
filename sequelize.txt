@@ -1,0 +1,5 @@
+npx sequelize-cli db:migrate
+npx sequelize-cli migration:generate --name create_users_table
+npm install sequelize mysql2
+npx sequelize-cli init
+npx sequelize-cli model:generate --name User --attributes firstName:string,lastName:string,email:string

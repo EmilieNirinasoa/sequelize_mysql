@@ -1,0 +1,47 @@
+const Sequelize = require('sequelize');
+const faker = require('faker');
+
+// Créer une instance Sequelize
+const sequelize = new Sequelize('database', 'username', 'password', {
+  host: 'localhost',
+  dialect: 'mysql', // Choisir le dialecte correspondant à votre base de données
+});
+
+// Définir un modèle Sequelize
+const User = sequelize.define('user', {
+  firstName: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  lastName: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true,
+  },
+});
+
+// Fonction pour générer des utilisateurs aléatoires
+const generateRandomUsers = async (count) => {
+  let users = [];
+  for (let i = 0; i < count; i++) {
+    users.push({
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      email: faker.internet.email(),
+    });
+  }
+  return users;
+};
+
+// Générer des utilisateurs aléatoires et les insérer dans la base de données
+generateRandomUsers(10).then(users => {
+  User.bulkCreate(users).then(() => {
+    console.log('Utilisateurs insérés avec succès.');
+  }).catch(err => {
+    console.error('Erreur lors de l\'insertion des utilisateurs :', err);
+  });
+});
